@@ -19,5 +19,6 @@
     "typeRoots": [
       "src/typings.d.ts"
     ]
+    
   }
 }
