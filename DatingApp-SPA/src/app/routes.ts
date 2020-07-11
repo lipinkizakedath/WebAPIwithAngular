@@ -11,7 +11,7 @@ import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
 
 export const appRoutes: Routes = [
 
-    { path: 'home', component: HomeComponent },
+    { path: '', component: HomeComponent },
     {
         path: '',
         runGuardsAndResolvers: 'always',
@@ -24,5 +24,5 @@ export const appRoutes: Routes = [
         ]
     },
 
-    { path: '**', redirectTo: 'home', pathMatch: 'full' },
+    { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
