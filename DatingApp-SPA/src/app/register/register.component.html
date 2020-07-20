@@ -11,7 +11,6 @@
     <label class="radio-inline ml-3">
       <input class="mr-3" type="radio" value="female" formControlName="gender">Female
     </label>
-<<<<<<< HEAD
   </div>
 
   <!-- KnwonAs -->
@@ -43,46 +42,6 @@
     <div class="invalid-feedback" *ngIf="registerForm.get('country').touched && registerForm.get('country').hasError('required')">Country is required</div>
   </div>
 
-=======
-  </div>
-
-  <!-- KnwonAs -->
-
-  <div class="form-group">
-    <input [ngClass]="{'is-invalid': registerForm.get('knownAs').errors && registerForm.get('knownAs').touched}"
-      class="form-control" placeholder="Known as" formControlName="knownAs">
-    <div class="invalid-feedback"
-      *ngIf="registerForm.get('knownAs').touched && registerForm.get('knownAs').hasError('required')">Known as is
-      required</div>
-  </div>
-
-  <!-- DateOfBith -->
-  <div class="form-group">
-    <input [ngClass]="{'is-invalid': registerForm.get('dateOfBirth').errors && registerForm.get('dateOfBirth').touched}"
-      class="form-control" placeholder="Date of Birth" formControlName="dateOfBirth" type="text" bsDatepicker [bsConfig]="bsConfig">
-    <div class="invalid-feedback"
-      *ngIf="registerForm.get('dateOfBirth').touched && registerForm.get('dateOfBirth').hasError('required')">Date of
-      Birth is required</div>
-  </div>
-
-  <!-- City -->
-  <div class="form-group">
-    <input [ngClass]="{'is-invalid': registerForm.get('city').errors && registerForm.get('city').touched}"
-      class="form-control" placeholder="City" formControlName="city">
-    <div class="invalid-feedback"
-      *ngIf="registerForm.get('city').touched && registerForm.get('city').hasError('required')">City is required</div>
-  </div>
-
-  <!-- Country -->
-  <div class="form-group">
-    <input [ngClass]="{'is-invalid': registerForm.get('country').errors && registerForm.get('country').touched}"
-      class="form-control" placeholder="Country" formControlName="country">
-    <div class="invalid-feedback"
-      *ngIf="registerForm.get('country').touched && registerForm.get('country').hasError('required')">Country is
-      required</div>
-  </div>
-
->>>>>>> d08d734f61dbcbb46bf15f8414790a7191806ee0
 
   <!-- Username -->
   <div class="form-group">
@@ -93,14 +52,8 @@
 
   <!-- password -->
   <div class="form-group">
-<<<<<<< HEAD
     <input [ngClass]="{'is-invalid': registerForm.get('password').errors && registerForm.get('password').touched}"
       type="password" class="form-control" formControlName="password" placeholder="Password">
-=======
-    <input type="password"
-      [ngClass]="{'is-invalid': registerForm.get('password').errors && registerForm.get('password').touched}"
-      class="form-control" formControlName="password" placeholder="Password">
->>>>>>> d08d734f61dbcbb46bf15f8414790a7191806ee0
     <div class="invalid-feedback"
       *ngIf="registerForm.get('password').hasError('required') && registerForm.get('password').touched">
       Password should field cannot be empty!</div>
@@ -127,17 +80,7 @@
 
 
   <div class="form-group text-center">
-<<<<<<< HEAD
     <button class="btn btn-success m-1" type="submit">Register</button>
     <button class="btn btn-danger m-1" type="button" (click)="cancel()">Cancel</button>
   </div>
 </form>
-
-<p>{{registerForm.value | json}}</p>
-<p>{{registerForm.status | json}}</p>
-=======
-    <button class="btn btn-success m-1" type="submit" [disabled]="!registerForm.valid">Register</button>
-    <button class="btn btn-danger m-1" type="button" (click)="cancel()">Cancel</button>
-  </div>
-</form>
->>>>>>> d08d734f61dbcbb46bf15f8414790a7191806ee0
