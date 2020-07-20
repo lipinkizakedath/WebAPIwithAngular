@@ -20,7 +20,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  changeMemberPhoto(photoUrl: string){
+  changeMemberPhoto(photoUrl: string) {
     this.photoUrl.next(photoUrl);
   }
 
@@ -43,7 +43,7 @@ export class AuthService {
     return this.http.post(this.baseUrl + 'register', model);
   }
 
-  loggedIn(){
+  loggedIn() {
 
     const token = localStorage.getItem('token');
     return !this.jwtHelper.isTokenExpired(token);
