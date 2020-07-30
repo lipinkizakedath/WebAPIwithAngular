@@ -1,4 +1,58 @@
-<div class="container mt-5">
+
+  <div class="text-center alert alert-info">
+    <h6>Total {{pagination.totalItems}} matched found for you!</h6>
+  </div>
+
+<div class="container mt-2 p-3">
+  <nav class="navbar navbar-nav navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand ml-3">Filter</a>
+  <div class="row">
+    <form #form = "ngForm" (ngSubmit)="loadUsers()"  class="form-inline" novalidate>
+
+      <div class="col-2 mt-2">
+        <label class="sr-only" for="inlineFormInputGroup">Age</label>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text">Age</div>
+          </div>
+          <input [(ngModel)]="userParams.minAge" type="number" name="minAge" class="form-control" id="inlineFormInputGroup" placeholder="Minimum">
+        </div>
+      </div>
+
+      <div class="col-2 mt-2">
+        <label class="sr-only" for="inlineFormInputGroup">Age</label>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text">Age</div>
+          </div>
+          <input [(ngModel)]="userParams.maxAge" type="number" name="maxAge" class="form-control" id="inlineFormInputGroup" placeholder="Maximum">
+        </div>
+      </div>
+
+      <div class="col-3 mt-2">
+        <label class="sr-only" for="inlineFormInputGroup">Gender</label>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text">Gender</div>
+          </div>
+          <select [(ngModel)]="userParams.gender" class="form-control" style="width: 130px" id="gender" name="gender">
+            <option *ngFor="let gender of genderList" [value]="gender.value">
+              {{gender.display}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ml-auto">
+        <button type="submit" class="btn btn-primary" >Apply Filters</button>
+        <button (click)="resetFilters()" type="button" class="btn btn-info ml-1">Reset Filter</button>
+      </div>
+      
+    </form>
+  </div>
+</nav>
+  <br>
+
   <div class="row">
     <div *ngFor="let user of users" class="col-lg-2 col-md-3 col-sm-6">
       <app-member-card [user]="user"></app-member-card>
