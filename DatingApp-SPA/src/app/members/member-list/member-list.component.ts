@@ -52,13 +52,13 @@ export class MemberListComponent implements OnInit {
 
   loadUsers() {
     this.userService.getUsers(this.pagination.currentPage,
-                              this.pagination.itemsPerPage,
-                              this.userParams).subscribe((res: PaginatedResults<User[]>) => {
-                              this.users = res.result;
-                              this.pagination = res.pagination;
-                            }, error => {
-                              this.alertify.error(error);
-                            });
+      this.pagination.itemsPerPage,
+      this.userParams).subscribe((res: PaginatedResults<User[]>) => {
+        this.users = res.result;
+        this.pagination = res.pagination;
+      }, error => {
+        this.alertify.error(error);
+      });
   }
 
 }
