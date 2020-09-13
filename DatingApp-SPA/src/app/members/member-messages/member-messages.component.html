@@ -1,0 +1,55 @@
+<div class="card">
+    <div class="card-body">
+        <div *ngIf="messages?.length === 0">
+            <p>No messages found!</p>
+        </div>
+
+        <ul class="chat">
+            <li *ngFor="let msg of messages">
+                <!-- to them -->
+                <div class="p-3" *ngIf="msg.senderId == recipientId" style="background-color: #FDEDEC; border-radius: 25px; width: 90%;">
+                    <span class="chat-img float-left">
+                        <img src="{{msg.senderPhotoUrl}}" alt="{{msg.senderKnownAs}}" class="rounded-circle">
+                    </span>
+                    <div class="chat-body">
+                        <div class="header">
+                            <h5 class="text-primary" style="font-size: medium; margin-left: 10%;">{{msg.senderKnownAs}}</h5>
+                            <small class="text-muted float-right">
+                                <span class="fa fa-clock-o"> {{msg.messageSent | timeago}}</span>
+                            </small>
+                        </div>
+                        <p style="font-size: 15px; margin-left: 10%;">{{msg.content}}</p>
+                    </div>
+                </div>
+
+                <!-- to me  -->
+                <div class="p-3" *ngIf="msg.senderId != recipientId" style="background-color: #FBEEE6; border-radius: 25px; width: 90%;">
+                    <span class="chat-img float-left">
+                        <img src="{{msg.senderPhotoUrl}}" alt="{{msg.senderKnownAs}}" class="rounded-circle">
+                    </span>
+                    <div class="chat-body">
+                        <div class="header">
+                            <h5 class="text-warning" style="font-size: medium; margin-left: 10%;">{{msg.senderKnownAs}}</h5>
+                            <small class="text-muted float-right">
+                                <span class="fa fa-clock-o"> {{msg.messageSent | timeago}}</span>
+                            </small>
+                        </div>
+                        <p style="font-size: 15px; margin-left: 10%;">{{msg.content}}</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="card-footer">
+        <form #messageForm="ngForm" (ngSubmit) = "messageForm.valid && sendMessage()">
+            <div class="input-group">
+                <input type="text" class="form-control input-sm" 
+                name="content" [(ngModel)]="newMessage.content" required
+                placeholder="Send a private message!">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" [disabled] = "messageForm.invalid"><i class="fa fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
