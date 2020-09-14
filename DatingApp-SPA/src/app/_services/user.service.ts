@@ -110,5 +110,9 @@ export class UserService {
     return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + id, {});
   }
 
+  markAsRead(messageid: number, userid: number){
+    return this.http.post(this.baseUrl + 'users/' + userid + '/messages/' + messageid + '/read', {}).subscribe();
+  }
+
 
 }
