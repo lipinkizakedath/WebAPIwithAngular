@@ -4,3 +4,4 @@ obj
 *.db
 appsettings.json
 datingapp.db
+wwwroot
