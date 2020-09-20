@@ -28,15 +28,20 @@ namespace DatingApp.API
 
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(x =>{
+                x.UseLazyLoadingProxies();
+                x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
             ConfigureServices(services);
         }
 
         public void ConfigureProductionServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x => x.UseMySql(
-                Configuration.GetConnectionString("DefaultConnection"), options => options.EnableRetryOnFailure())
-                );
+            services.AddDbContext<DataContext>(x => {
+                x.UseLazyLoadingProxies();
+                x.UseMySql(Configuration.GetConnectionString("DefaultConnection"), options => options.EnableRetryOnFailure());
+            });
 
             ConfigureServices(services);
         }
@@ -44,9 +49,10 @@ namespace DatingApp.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddDbContext<DataContext>(x => x.UseMySql(
-            //     Configuration.GetConnectionString("DefaultConnection"),
-            //     options => options.EnableRetryOnFailure()));
+            // services.AddDbContext<DataContext>(x => {
+            //     x.UseLazyLoadingProxies();
+            //     x.UseMySql(Configuration.GetConnectionString("DefaultConnection"), options => options.EnableRetryOnFailure());
+            // });
 
             services.AddControllers().AddNewtonsoftJson(opt=>{
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;});
