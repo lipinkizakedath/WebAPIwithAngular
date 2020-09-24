@@ -7,3 +7,18 @@ img.img-thumbnail{
 .nv-file-over {
     border: dashed 1px lightseagreen;
 }
+
+.not-approved{
+    opacity: 0.2;
+}
+
+.img-wrapper{
+    position: relative;
+}
+
+.img-text{
+    position: absolute;
+    bottom: 45%;
+    margin-left: 13%;
+    font-weight: 400;
+}

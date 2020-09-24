@@ -1,0 +1,17 @@
+<div class="container my-5">
+    <h5 class="p-2 text-black-30"><i class="fa fa-cogs"></i> Manage user's privilages</h5>
+    <div class="tab-panel">
+        <tabset class="member-tabset">
+            <tab heading="User Management" *appHasRoles="['Admin']">
+                <div class="container">
+                    <app-user-management></app-user-management>
+                </div>
+            </tab>
+            <tab  heading="Photo Management" *appHasRoles="['Admin', 'Moderator']">
+                <div class="container">
+                    <app-photo-management></app-photo-management>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

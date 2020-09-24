@@ -114,5 +114,17 @@ export class UserService {
     return this.http.post(this.baseUrl + 'users/' + userid + '/messages/' + messageid + '/read', {}).subscribe();
   }
 
+  getUnapprovedPhotos(userId: number){
+    return this.http.get(this.baseUrl + 'users/' + userId + '/photos/GetUnApprovedPhotos');
+  }
+
+  approvePendingPhotos(userId: number, photoId: number){
+    return this.http.post(this.baseUrl + 'users/' + userId + '/photos/ApprovePendingPhotos/' + photoId, {});
+  }
+
+  rejectPendingPhotos(userId: number, photoId: number){
+    return this.http.post(this.baseUrl + 'users/' + userId + '/photos/rejectPhoto/' + photoId, {});
+  }
+
 
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DatingApp.API.DTOs;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
@@ -32,20 +33,24 @@ namespace DatingApp.API.Data
 
         public async Task<Photo> GetMainPhotoForUser(int userId)
         {
-            return await _context.Photos.Where(u => u.UserId == userId)
+            return await _context.Photos.IgnoreQueryFilters().Where(u => u.UserId == userId)
                                         .FirstOrDefaultAsync(p => p.IsMain);
         }
 
         public async Task<Photo> GetPhoto(int Id)
         {
-            var photo = await _context.Photos.FirstOrDefaultAsync(p => p.Id == Id);
-
+            var photo = await _context.Photos.IgnoreQueryFilters().FirstOrDefaultAsync(p => p.Id == Id);
             return photo;
         }
 
-        public async Task<User> GetUser(int Id)
+        public async Task<User> GetUser(int Id, bool isCurrentUser)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == Id);
+            var query = _context.Users.Include(p => p.Photos).AsQueryable();
+            
+            if(isCurrentUser)
+                query = query.IgnoreQueryFilters();
+
+            var user = await query.FirstOrDefaultAsync(u => u.Id == Id);
             return user;
         }
 
@@ -145,5 +150,33 @@ namespace DatingApp.API.Data
                                 .OrderByDescending(m => m.MessageSent).ToListAsync();
             return messages;
         }
+
+        public async Task<List<PhotoForApprovalDto>> GetUnApprovedPhotos()
+        {
+            var photos = await _context.Photos.Include( u => u.User).IgnoreQueryFilters()
+                            .Where(p => p.IsApproved == false)
+                            .Select( u => new PhotoForApprovalDto{ 
+                                Id = u.Id, 
+                                UserId = u.UserId,  
+                                UserName = u.User.UserName, 
+                                Url = u.Url, 
+                                IsApproved = u.IsApproved }).ToListAsync();
+
+            return photos;
+        }
+
+        public async Task<Photo> GetNotApprovedPhoto(int photoId)
+        {
+            var pendingPhoto = await _context.Photos.IgnoreQueryFilters().Where(p =>p.IsApproved == false)
+                                              .FirstOrDefaultAsync(p => p.Id == photoId);
+            return pendingPhoto;
+        }
+
+        public async Task<Photo> RejectPhotos(int photoId)
+        {
+            var photoToReject = await _context.Photos.IgnoreQueryFilters().FirstOrDefaultAsync(p => p.Id == photoId);
+            return photoToReject;
+        }
+
     }
 }

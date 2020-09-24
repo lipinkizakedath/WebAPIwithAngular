@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="row">
+        <div class="card col-3" *ngFor="let photo of photos">
+            <img class="card-img-top mt-3" src="{{photo.url}}" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title text-center">{{photo.userName}}</h5>
+              <button class="btn btn-primary btn-sm mx-1" (click)="approvePhoto(photo.id)">
+                    <i class="fa fa-check"></i> Approve
+                </button>
+              <button class="btn btn-primary btn-sm mx-1" (click) = "rejectPhoto(photo.id)">
+                <i class="fa fa-trash"></i> Reject
+            </button>
+            </div>
+        </div>
+        <h5 *ngIf="!photos?.length" class="text-center p-4">No pending photos available for approval!</h5>
+    </div>
+</div>

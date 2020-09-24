@@ -83,6 +83,12 @@ namespace DatingApp.API
                     };
                 });
 
+            services.AddAuthorization( options =>{
+                options.AddPolicy("RequireAdminRole", policy=> policy.RequireRole("Admin"));
+                options.AddPolicy("ModeratePhotoRole", policy=> policy.RequireRole("Admin", "Moderator"));
+                options.AddPolicy("VIPOnly", policy=> policy.RequireRole("VIP"));
+            });
+
             services.AddControllers( options =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();

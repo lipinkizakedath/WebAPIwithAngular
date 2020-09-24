@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -58,7 +59,7 @@ namespace DatingApp.API.Controllers
             if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId, true);
 
             var file = photoForCreationDto.File;
 
@@ -81,8 +82,11 @@ namespace DatingApp.API.Controllers
 
             var photo = _mapper.Map<Photo>(photoForCreationDto);
 
-            if(!userFromRepo.Photos.Any(u =>u.IsMain))
-                photo.IsMain = true;
+            // if(!userFromRepo.Photos.Any(u =>u.IsMain))
+            // {
+            //     if(userFromRepo.Photos.Any(p => p.IsApproved))
+            //     photo.IsMain = true;
+            // }
 
             userFromRepo.Photos.Add(photo);
 
@@ -103,7 +107,10 @@ namespace DatingApp.API.Controllers
         {
             if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            var user = await _repo.GetUser(userId);
+
+            var isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == userId;
+
+            var user = await _repo.GetUser(userId, isCurrentUser);
 
             if(!user.Photos.Any(p => p.Id == id))
                 return Unauthorized();
@@ -112,7 +119,9 @@ namespace DatingApp.API.Controllers
 
             if(photoFromRepo.IsMain)
                 return BadRequest("This is already the main photo");
+
             var currentMainPhoto = await _repo.GetMainPhotoForUser(userId);
+            
             currentMainPhoto.IsMain = false;
             photoFromRepo.IsMain = true;
 
@@ -129,7 +138,7 @@ namespace DatingApp.API.Controllers
             if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var user = await _repo.GetUser(userId);
+            var user = await _repo.GetUser(userId, true);
 
             if(!user.Photos.Any(p => p.Id == id))
                 return Unauthorized();
@@ -164,9 +173,92 @@ namespace DatingApp.API.Controllers
         }
 
 
+        [HttpGet]
+        [Route("GetUnapprovedPhotos")]
+        [Authorize(Policy = "ModeratePhotoRole")]
+        public async Task<IActionResult> GetUnApprovedPhotos(int userId)
+        {
+            if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var notApprovedPhotos = await _repo.GetUnApprovedPhotos();
+
+            if(notApprovedPhotos == null)
+                return NoContent();
+            
+            return Ok(notApprovedPhotos);
+        }
 
 
+        [HttpPost]
+        [Route("ApprovePendingPhotos/{photoId}")]
+        [Authorize(Policy = "ModeratePhotoRole")]
+        public async Task<IActionResult> ApprovePendingPhotos(int userId, [FromRoute]int photoId)
+        {
+            if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+            
+            var pendingPhoto = await _repo.GetNotApprovedPhoto(photoId);
 
+            if(pendingPhoto == null)
+                return BadRequest("This is alreay an approved photo!");
+
+            if(!pendingPhoto.IsApproved)
+            {
+                pendingPhoto.IsApproved = true;
+                await _repo.SaveAll();
+                return Ok("Photo approved!");
+            }
+            return BadRequest();
+
+        }
+
+
+        [HttpPost("rejectPhoto/{photoId}")]
+        [Authorize(Policy = "ModeratePhotoRole")]
+        public async Task<IActionResult> RejectPendingPhotos(int photoId)
+        {
+            var photoToReject = await _repo.RejectPhotos(photoId);
+
+            if(photoToReject == null)
+                return BadRequest("No such photo exist!");
+
+            if(photoToReject.IsMain || photoToReject.IsApproved)
+                return BadRequest("Approved photos can be delete only the user");
+
+            if(photoToReject.PublicId != null)
+            {
+                var deleteParams = new DeletionParams(photoToReject.PublicId);
+                var result = _cloudinary.Destroy(deleteParams);
+
+                if(result.Result == "ok")
+                {
+                    _repo.Delete(photoToReject);
+
+                    if(await _repo.SaveAll())
+                    {
+                        return Ok("Photo deleted!");
+                    }
+
+                }
+                return BadRequest("Not foud in cloud!");
+
+            }
+
+            if(photoToReject.PublicId == null)
+            {
+                _repo.Delete(photoToReject);
+
+                if(await _repo.SaveAll())
+                {
+                    return Ok("Photo deleted!");
+                }
+            }
+
+            return BadRequest("Could not delete photo!");
+            
+            
+        }
 
 
     }

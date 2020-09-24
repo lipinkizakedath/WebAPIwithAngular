@@ -10,6 +10,7 @@ namespace DatingApp.API.DTOs
         public string Decription { get; set; }
         public DateTime DateAdded { get; set; }
         public string publicId { get; set; }    
+        public bool IsApproved { get; set; } = false;
 
         public PhotoForCreationDto()
         {

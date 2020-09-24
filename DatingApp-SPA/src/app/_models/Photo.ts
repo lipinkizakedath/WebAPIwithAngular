@@ -4,4 +4,6 @@ export interface Photo {
     decription: string;
     dateAdded: Date;
     isMain: boolean;
+    isApproved: boolean;
+    userName?: string;
 }

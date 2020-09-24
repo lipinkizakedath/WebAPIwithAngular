@@ -19,6 +19,9 @@ namespace DatingApp.API.Data
         public DbSet<Message> Messages { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            //filtering all unapproved photos from response
+            builder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
+
             base.OnModelCreating(builder);
 
             builder.Entity<UserRole>( UserRole=>{
