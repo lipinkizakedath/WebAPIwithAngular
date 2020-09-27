@@ -206,8 +206,9 @@ namespace DatingApp.API.Controllers
             if(!pendingPhoto.IsApproved)
             {
                 pendingPhoto.IsApproved = true;
+                
                 await _repo.SaveAll();
-                return Ok("Photo approved!");
+                return Ok();
             }
             return BadRequest();
 
@@ -237,7 +238,7 @@ namespace DatingApp.API.Controllers
 
                     if(await _repo.SaveAll())
                     {
-                        return Ok("Photo deleted!");
+                        return Ok();
                     }
 
                 }
@@ -251,7 +252,7 @@ namespace DatingApp.API.Controllers
 
                 if(await _repo.SaveAll())
                 {
-                    return Ok("Photo deleted!");
+                    return Ok();
                 }
             }
 

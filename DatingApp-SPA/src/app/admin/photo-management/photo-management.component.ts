@@ -25,18 +25,21 @@ export class PhotoManagementComponent implements OnInit {
   approvePhoto(photoId: number){
     this.userService.approvePendingPhotos(this.authService.decodedToken.nameid, photoId).subscribe(
       () => {
-        this.photos.splice(this.photos.findIndex(p => p.id = photoId), 1); this.alertify.success('Photo approved!');
+        this.photos.splice(this.photos.findIndex(p => p.id === photoId), 1); this.alertify.success('Photo approved!');
       }, error => { this.alertify.error(error); }
     );
 
   }
 
   rejectPhoto(photoId: number){
-    this.userService.rejectPendingPhotos(this.authService.decodedToken.nameid, photoId).subscribe(
-      () => {
-        this.photos.splice(this.photos.findIndex(p => p.id = photoId), 1); this.alertify.success('Photo rejected');
-      }, error => { this.alertify.error(error); }
-    );
+    this.alertify.confirm('Confirm reject and delete?', () => {
+      this.userService.rejectPendingPhotos(this.authService.decodedToken.nameid, photoId).subscribe(() => {
+        this.photos.splice(this.photos.findIndex(p => p.id === photoId), 1);
+        this.alertify.success('Photo rejected succesfully!');
+      }, error => {
+        this.alertify.error(error);
+      });
+    });
   }
 
 }
